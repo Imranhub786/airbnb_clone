@@ -1,0 +1,831 @@
+# GraphQL Schema for Airbnb Clone
+
+# Scalar Types
+scalar DateTime
+scalar Date
+scalar Long
+scalar BigDecimal
+
+# Enums
+enum UserRole {
+    GUEST
+    HOST
+    SUPER_HOST
+    ADMIN
+}
+
+enum AccountStatus {
+    ACTIVE
+    INACTIVE
+    SUSPENDED
+    PENDING_VERIFICATION
+    BANNED
+}
+
+enum PropertyType {
+    APARTMENT
+    HOUSE
+    CONDO
+    TOWNHOUSE
+    VILLA
+    STUDIO
+    LOFT
+    PENTHOUSE
+    CABIN
+    COTTAGE
+    CASTLE
+    TREEHOUSE
+    BOAT
+    RV
+    TENT
+    YURT
+    BARN
+    FARM
+    WINERY
+    BEACH_HOUSE
+    MOUNTAIN_HOUSE
+    LAKE_HOUSE
+    SKI_CHALET
+    BED_AND_BREAKFAST
+    HOTEL
+    HOSTEL
+    GUESTHOUSE
+    GUEST_SUITE
+    PRIVATE_ROOM
+    SHARED_ROOM
+    OTHER
+}
+
+enum PropertyStatus {
+    ACTIVE
+    INACTIVE
+    PENDING_APPROVAL
+    SUSPENDED
+    DRAFT
+    MAINTENANCE
+    DELETED
+}
+
+enum BookingStatus {
+    PENDING
+    CONFIRMED
+    CHECKED_IN
+    CHECKED_OUT
+    COMPLETED
+    CANCELLED
+    NO_SHOW
+    REFUNDED
+}
+
+enum PaymentStatus {
+    PENDING
+    PROCESSING
+    COMPLETED
+    FAILED
+    CANCELLED
+    REFUNDED
+    PARTIALLY_REFUNDED
+    DISPUTED
+    CHARGEBACK
+}
+
+enum PaymentType {
+    BOOKING_PAYMENT
+    SECURITY_DEPOSIT
+    CLEANING_FEE
+    SERVICE_FEE
+    TAXES
+    REFUND
+    PARTIAL_REFUND
+    HOST_PAYOUT
+    PLATFORM_FEE
+    PENALTY
+    ADJUSTMENT
+}
+
+enum PaymentMethod {
+    PAYPAL
+    PAYPAL_CREDIT
+    PAYPAL_DEBIT
+    CREDIT_CARD
+    DEBIT_CARD
+    BANK_TRANSFER
+    WALLET
+    CASH
+    CHECK
+    OTHER
+}
+
+enum ReviewType {
+    GUEST_TO_HOST
+    GUEST_TO_PROPERTY
+    HOST_TO_GUEST
+}
+
+enum ReviewStatus {
+    PENDING
+    PUBLISHED
+    REJECTED
+    HIDDEN
+    DELETED
+}
+
+enum ImageCategory {
+    PROPERTY_MAIN
+    PROPERTY_INTERIOR
+    PROPERTY_EXTERIOR
+    PROPERTY_AMENITIES
+    PROPERTY_NEIGHBORHOOD
+    USER_PROFILE
+    USER_VERIFICATION
+    BOOKING_DOCUMENT
+    REVIEW_IMAGE
+    SUPPORT_ATTACHMENT
+    OTHER
+}
+
+enum Amenity {
+    WIFI
+    KITCHEN
+    WASHER
+    DRYER
+    AIR_CONDITIONING
+    HEATING
+    DEDICATED_WORKSPACE
+    TV
+    HAIR_DRYER
+    IRON
+    HANGERS
+    SHAMPOO
+    BODY_SOAP
+    HOT_WATER
+    BED_LINENS
+    EXTRA_PILLOWS_AND_BLANKETS
+    ROOM_DARKENING_SHADES
+    CLOTHES_DRYER
+    DRYER_IN_UNIT
+    WASHER_IN_UNIT
+    WIFI_FAST
+    LAPTOP_FRIENDLY_WORKSPACE
+    TV_STANDARD
+    TV_HD
+    TV_4K
+    SOUND_SYSTEM
+    GAME_CONSOLE
+    BOOKS_AND_READING_MATERIAL
+    CHILDREN_BOOKS_AND_TOYS
+    CHILDREN_DINNERWARE
+    HIGH_CHAIR
+    BABY_BATH
+    BABY_MONITOR
+    CRIB
+    PACK_N_PLAY_TRAVEL_CRIB
+    BABY_GATE
+    OUTLET_COVERS
+    WINDOW_GUARDS
+    CENTRAL_AIR_CONDITIONING
+    WINDOW_AIR_CONDITIONING
+    SPACE_HEATER
+    FIREPLACE
+    INDOOR_FIREPLACE
+    OUTDOOR_FIREPLACE
+    WIFI_DEDICATED_WORKSPACE
+    WIFI_LAPTOP_FRIENDLY
+    PRINTER
+    DESK
+    CHAIR
+    MONITOR
+    KITCHEN_FULL
+    KITCHEN_BASIC
+    REFRIGERATOR
+    MICROWAVE
+    DISHWASHER
+    DISHES_AND_SILVERWARE
+    COOKING_BASICS
+    OVEN
+    STOVE
+    COFFEE_MAKER
+    TOASTER
+    WINE_GLASSES
+    DINING_TABLE
+    PRIVATE_ENTRANCE
+    PRIVATE_LIVING_ROOM
+    LOCK_ON_BEDROOM_DOOR
+    LOCKBOX
+    SMART_LOCK
+    KEYPAD
+    BALCONY
+    PATIO_OR_BALCONY
+    BACKYARD
+    BBQ_GRILL
+    OUTDOOR_DINING_AREA
+    OUTDOOR_FURNITURE
+    FIRE_PIT
+    POOL
+    HOT_TUB
+    SAUNA
+    GARDEN_VIEW
+    POOL_VIEW
+    WATERFRONT
+    BEACH_ACCESS
+    LAKE_ACCESS
+    SKI_IN_SKI_OUT
+    FREE_PARKING_ON_PREMISES
+    FREE_STREET_PARKING
+    PAID_PARKING_OFF_PREMISES
+    PAID_PARKING_ON_PREMISES
+    ELEVATOR
+    GYM
+    FITNESS_CENTER
+    SMOKE_ALARM
+    CARBON_MONOXIDE_ALARM
+    FIRE_EXTINGUISHER
+    FIRST_AID_KIT
+    SECURITY_CAMERAS_ON_PROPERTY
+    WEAPONS_ON_PROPERTY
+    DANGEROUS_ANIMALS_ON_PROPERTY
+    WHEELCHAIR_ACCESSIBLE
+    STEP_FREE_ACCESS
+    WIDE_ENTRANCE
+    WIDE_HALLWAY_CLEARANCES
+    ACCESSIBLE_BATHROOM
+    ACCESSIBLE_BEDROOM
+    ACCESSIBLE_PARKING
+    ACCESSIBLE_PATH_TO_ENTRANCE
+    PETS_ALLOWED
+    PET_BOWL
+    PET_BED
+    PET_FEEDER
+}
+
+# Types
+type User {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+    phoneNumber: String
+    role: UserRole!
+    status: AccountStatus!
+    profileImageUrl: String
+    bio: String
+    dateOfBirth: DateTime
+    isEmailVerified: Boolean!
+    isPhoneVerified: Boolean!
+    preferredCurrency: String!
+    preferredLanguage: String!
+    hostRating: BigDecimal
+    guestRating: BigDecimal
+    totalReviews: Int!
+    lastLogin: DateTime
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    properties: [Property!]!
+    bookings: [Booking!]!
+    reviews: [Review!]!
+    payments: [Payment!]!
+}
+
+type Address {
+    streetAddress: String!
+    city: String!
+    stateProvince: String!
+    postalCode: String!
+    country: String!
+    latitude: Float
+    longitude: Float
+    landmark: String
+    neighborhood: String
+}
+
+type Property {
+    id: ID!
+    title: String!
+    description: String!
+    propertyType: PropertyType!
+    host: User!
+    pricePerNight: BigDecimal!
+    currency: String!
+    maxGuests: Int!
+    bedrooms: Int!
+    bathrooms: Int!
+    beds: Int
+    status: PropertyStatus!
+    address: Address
+    amenities: [Amenity!]!
+    images: [String!]!
+    mainImageUrl: String
+    rating: BigDecimal
+    totalReviews: Int!
+    cleaningFee: BigDecimal
+    serviceFee: BigDecimal
+    securityDeposit: BigDecimal
+    minimumNights: Int!
+    maximumNights: Int!
+    checkInTime: String!
+    checkOutTime: String!
+    instantBook: Boolean!
+    isPetFriendly: Boolean!
+    isSmokingAllowed: Boolean!
+    isEntirePlace: Boolean!
+    cancellationPolicy: String!
+    houseRules: String
+    lastUpdatedAvailability: DateTime
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    bookings: [Booking!]!
+    reviews: [Review!]!
+    availability: [PropertyAvailability!]!
+}
+
+type PropertyAvailability {
+    id: ID!
+    property: Property!
+    date: Date!
+    status: AvailabilityStatus!
+    price: BigDecimal
+    minimumNights: Int
+    maximumNights: Int
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+enum AvailabilityStatus {
+    AVAILABLE
+    UNAVAILABLE
+    BLOCKED
+    BOOKED
+}
+
+type Booking {
+    id: ID!
+    bookingReference: String!
+    property: Property!
+    guest: User!
+    checkInDate: Date!
+    checkOutDate: Date!
+    numberOfGuests: Int!
+    numberOfNights: Int!
+    basePrice: BigDecimal!
+    cleaningFee: BigDecimal
+    serviceFee: BigDecimal
+    securityDeposit: BigDecimal
+    taxes: BigDecimal
+    totalPrice: BigDecimal!
+    currency: String!
+    status: BookingStatus!
+    paymentStatus: PaymentStatus!
+    specialRequests: String
+    guestMessage: String
+    hostMessage: String
+    cancellationReason: String
+    cancelledAt: DateTime
+    cancelledBy: String
+    refundAmount: BigDecimal
+    refundProcessedAt: DateTime
+    checkInInstructions: String
+    checkOutInstructions: String
+    keyExchangeMethod: String
+    emergencyContact: String
+    hostRating: Int
+    propertyRating: Int
+    guestReview: String
+    hostReview: String
+    reviewedAt: DateTime
+    isInstantBook: Boolean!
+    bookingSource: String!
+    ipAddress: String
+    userAgent: String
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    payments: [Payment!]!
+    reviews: [Review!]!
+}
+
+type Payment {
+    id: ID!
+    paymentReference: String!
+    booking: Booking!
+    user: User!
+    amount: BigDecimal!
+    currency: String!
+    paymentType: PaymentType!
+    paymentMethod: PaymentMethod!
+    status: PaymentStatus!
+    paypalPaymentId: String
+    paypalOrderId: String
+    paypalCaptureId: String
+    paypalRefundId: String
+    paypalTransactionId: String
+    paypalFee: BigDecimal
+    netAmount: BigDecimal
+    exchangeRate: BigDecimal
+    originalCurrency: String
+    originalAmount: BigDecimal
+    description: String
+    failureReason: String
+    refundReason: String
+    processedAt: DateTime
+    failedAt: DateTime
+    refundedAt: DateTime
+    refundAmount: BigDecimal
+    isPartialRefund: Boolean!
+    webhookData: String
+    callbackUrl: String
+    returnUrl: String
+    cancelUrl: String
+    retryCount: Int!
+    maxRetries: Int!
+    nextRetryAt: DateTime
+    metadata: String
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+type Review {
+    id: ID!
+    booking: Booking!
+    property: Property!
+    reviewer: User!
+    reviewee: User!
+    reviewType: ReviewType!
+    rating: Int!
+    reviewText: String
+    status: ReviewStatus!
+    isAnonymous: Boolean!
+    isVerifiedStay: Boolean!
+    responseText: String
+    responseDate: DateTime
+    helpfulCount: Int!
+    notHelpfulCount: Int!
+    reportedCount: Int!
+    isFeatured: Boolean!
+    moderationNotes: String
+    moderatedBy: String
+    moderatedAt: DateTime
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+type Image {
+    id: ID!
+    imageUrl: String!
+    imageName: String!
+    imageType: String
+    fileSize: Long
+    fileExtension: String
+    width: Int
+    height: Int
+    altText: String
+    caption: String
+    isMainImage: Boolean!
+    displayOrder: Int!
+    category: ImageCategory!
+    property: Property
+    user: User
+    booking: Booking
+    isVerified: Boolean!
+    isPublic: Boolean!
+    uploadSource: String!
+    storageProvider: String!
+    storageBucket: String
+    storageKey: String
+    cdnUrl: String
+    thumbnailUrl: String
+    mediumUrl: String
+    largeUrl: String
+    originalUrl: String
+    isDeleted: Boolean!
+    deletedAt: DateTime
+    deletedBy: String
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+# Input Types
+input UserInput {
+    firstName: String!
+    lastName: String!
+    email: String!
+    password: String!
+    phoneNumber: String
+    role: UserRole
+    bio: String
+    dateOfBirth: DateTime
+    preferredCurrency: String
+    preferredLanguage: String
+}
+
+input PropertyInput {
+    title: String!
+    description: String!
+    propertyType: PropertyType!
+    hostId: ID!
+    pricePerNight: BigDecimal!
+    currency: String
+    maxGuests: Int!
+    bedrooms: Int!
+    bathrooms: Int!
+    beds: Int
+    address: AddressInput!
+    amenities: [Amenity!]
+    images: [String!]
+    mainImageUrl: String
+    cleaningFee: BigDecimal
+    serviceFee: BigDecimal
+    securityDeposit: BigDecimal
+    minimumNights: Int
+    maximumNights: Int
+    checkInTime: String
+    checkOutTime: String
+    instantBook: Boolean
+    isPetFriendly: Boolean
+    isSmokingAllowed: Boolean
+    isEntirePlace: Boolean
+    cancellationPolicy: String
+    houseRules: String
+}
+
+input AddressInput {
+    streetAddress: String!
+    city: String!
+    stateProvince: String!
+    postalCode: String!
+    country: String!
+    latitude: Float
+    longitude: Float
+    landmark: String
+    neighborhood: String
+}
+
+input BookingInput {
+    propertyId: ID!
+    guestId: ID!
+    checkInDate: Date!
+    checkOutDate: Date!
+    numberOfGuests: Int!
+    specialRequests: String
+    guestMessage: String
+}
+
+input PaymentInput {
+    bookingId: ID!
+    userId: ID!
+    amount: BigDecimal!
+    currency: String!
+    paymentType: PaymentType!
+    paymentMethod: PaymentMethod!
+    description: String
+    returnUrl: String
+    cancelUrl: String
+}
+
+input ReviewInput {
+    bookingId: ID!
+    propertyId: ID!
+    reviewerId: ID!
+    revieweeId: ID!
+    reviewType: ReviewType!
+    rating: Int!
+    reviewText: String
+    isAnonymous: Boolean
+}
+
+input PropertySearchInput {
+    city: String
+    stateProvince: String
+    country: String
+    propertyType: PropertyType
+    minPrice: BigDecimal
+    maxPrice: BigDecimal
+    minGuests: Int
+    minBedrooms: Int
+    minBathrooms: Int
+    instantBook: Boolean
+    isPetFriendly: Boolean
+    isSmokingAllowed: Boolean
+    isEntirePlace: Boolean
+    minRating: BigDecimal
+    amenities: [Amenity!]
+    latitude: Float
+    longitude: Float
+    radius: Float
+    checkInDate: Date
+    checkOutDate: Date
+    page: Int
+    size: Int
+    sortBy: String
+    sortDirection: String
+}
+
+# Response Types
+type PropertySearchResponse {
+    properties: [Property!]!
+    totalCount: Long!
+    page: Int!
+    size: Int!
+    totalPages: Int!
+    hasNext: Boolean!
+    hasPrevious: Boolean!
+}
+
+type BookingResponse {
+    booking: Booking!
+    paymentUrl: String
+    message: String!
+}
+
+type PaymentResponse {
+    payment: Payment!
+    paymentUrl: String
+    message: String!
+}
+
+type AuthResponse {
+    user: User!
+    token: String!
+    message: String!
+}
+
+# Queries
+type Query {
+    # User Queries
+    user(id: ID!): User
+    users(page: Int, size: Int, role: UserRole, status: AccountStatus): [User!]!
+    currentUser: User
+    
+    # Property Queries
+    property(id: ID!): Property
+    properties(page: Int, size: Int, status: PropertyStatus, type: PropertyType): [Property!]!
+    propertiesByHost(hostId: ID!, page: Int, size: Int): [Property!]!
+    searchProperties(input: PropertySearchInput!): PropertySearchResponse!
+    propertiesByLocation(latitude: Float!, longitude: Float!, radius: Float!): [Property!]!
+    
+    # Booking Queries
+    booking(id: ID!): Booking
+    bookingByReference(reference: String!): Booking
+    bookings(page: Int, size: Int, status: BookingStatus): [Booking!]!
+    bookingsByUser(userId: ID!, page: Int, size: Int): [Booking!]!
+    bookingsByProperty(propertyId: ID!, page: Int, size: Int): [Booking!]!
+    bookingsByHost(hostId: ID!, page: Int, size: Int): [Booking!]!
+    upcomingBookings(userId: ID!): [Booking!]!
+    currentBookings(userId: ID!): [Booking!]!
+    pastBookings(userId: ID!): [Booking!]!
+    
+    # Payment Queries
+    payment(id: ID!): Payment
+    payments(page: Int, size: Int, status: PaymentStatus): [Payment!]!
+    paymentsByUser(userId: ID!, page: Int, size: Int): [Payment!]!
+    paymentsByBooking(bookingId: ID!): [Payment!]!
+    
+    # Review Queries
+    review(id: ID!): Review
+    reviews(page: Int, size: Int, status: ReviewStatus): [Review!]!
+    reviewsByProperty(propertyId: ID!, page: Int, size: Int): [Review!]!
+    reviewsByUser(userId: ID!, page: Int, size: Int): [Review!]!
+    reviewsByBooking(bookingId: ID!): [Review!]!
+    
+    # Image Queries
+    image(id: ID!): Image
+    images(page: Int, size: Int, category: ImageCategory): [Image!]!
+    imagesByProperty(propertyId: ID!): [Image!]!
+    imagesByUser(userId: ID!): [Image!]!
+    
+    # Statistics Queries
+    propertyStats(propertyId: ID!): PropertyStats!
+    userStats(userId: ID!): UserStats!
+    hostStats(hostId: ID!): HostStats!
+    platformStats: PlatformStats!
+}
+
+type PropertyStats {
+    totalBookings: Int!
+    totalRevenue: BigDecimal!
+    averageRating: BigDecimal!
+    totalReviews: Int!
+    occupancyRate: Float!
+    averageStayDuration: Float!
+}
+
+type UserStats {
+    totalBookings: Int!
+    totalSpent: BigDecimal!
+    totalReviews: Int!
+    averageRating: BigDecimal!
+    favoritePropertyType: PropertyType
+    favoriteDestination: String
+}
+
+type HostStats {
+    totalProperties: Int!
+    totalBookings: Int!
+    totalRevenue: BigDecimal!
+    averageRating: BigDecimal!
+    totalReviews: Int!
+    occupancyRate: Float!
+}
+
+type PlatformStats {
+    totalUsers: Int!
+    totalProperties: Int!
+    totalBookings: Int!
+    totalRevenue: BigDecimal!
+    averagePropertyRating: BigDecimal!
+    totalReviews: Int!
+}
+
+# Mutations
+type Mutation {
+    # User Mutations
+    registerUser(input: UserInput!): AuthResponse!
+    loginUser(email: String!, password: String!): AuthResponse!
+    updateUser(id: ID!, input: UserInput!): User!
+    deleteUser(id: ID!): Boolean!
+    changePassword(id: ID!, oldPassword: String!, newPassword: String!): Boolean!
+    resetPassword(id: ID!, newPassword: String!): Boolean!
+    verifyEmail(id: ID!): Boolean!
+    verifyPhone(id: ID!): Boolean!
+    updateUserRole(id: ID!, role: UserRole!): User!
+    updateUserStatus(id: ID!, status: AccountStatus!): User!
+    
+    # Property Mutations
+    createProperty(input: PropertyInput!): Property!
+    updateProperty(id: ID!, input: PropertyInput!): Property!
+    deleteProperty(id: ID!): Boolean!
+    updatePropertyStatus(id: ID!, status: PropertyStatus!): Property!
+    addPropertyImage(id: ID!, imageUrl: String!): Property!
+    removePropertyImage(id: ID!, imageUrl: String!): Property!
+    setMainPropertyImage(id: ID!, imageUrl: String!): Property!
+    addPropertyAmenity(id: ID!, amenity: Amenity!): Property!
+    removePropertyAmenity(id: ID!, amenity: Amenity!): Property!
+    
+    # Booking Mutations
+    createBooking(input: BookingInput!): BookingResponse!
+    updateBooking(id: ID!, input: BookingInput!): Booking!
+    cancelBooking(id: ID!, reason: String!): Booking!
+    confirmBooking(id: ID!): Booking!
+    checkInBooking(id: ID!): Booking!
+    checkOutBooking(id: ID!): Booking!
+    completeBooking(id: ID!): Booking!
+    
+    # Payment Mutations
+    createPayment(input: PaymentInput!): PaymentResponse!
+    processPayment(id: ID!): PaymentResponse!
+    refundPayment(id: ID!, amount: BigDecimal, reason: String!): Payment!
+    updatePaymentStatus(id: ID!, status: PaymentStatus!): Payment!
+    
+    # Review Mutations
+    createReview(input: ReviewInput!): Review!
+    updateReview(id: ID!, input: ReviewInput!): Review!
+    deleteReview(id: ID!): Boolean!
+    publishReview(id: ID!): Review!
+    rejectReview(id: ID!, reason: String!): Review!
+    addReviewResponse(id: ID!, responseText: String!): Review!
+    voteReviewHelpful(id: ID!): Review!
+    voteReviewNotHelpful(id: ID!): Review!
+    reportReview(id: ID!, reason: String!): Review!
+    
+    # Image Mutations
+    uploadImage(file: Upload!, category: ImageCategory!, propertyId: ID, userId: ID, bookingId: ID): Image!
+    deleteImage(id: ID!): Boolean!
+    updateImage(id: ID!, altText: String, caption: String): Image!
+    setMainImage(id: ID!): Image!
+}
+
+# Subscriptions
+type Subscription {
+    # Real-time updates
+    bookingUpdated(bookingId: ID!): Booking!
+    paymentUpdated(paymentId: ID!): Payment!
+    reviewAdded(propertyId: ID!): Review!
+    propertyUpdated(propertyId: ID!): Property!
+    userUpdated(userId: ID!): User!
+    
+    # Notifications
+    notificationReceived(userId: ID!): Notification!
+    messageReceived(userId: ID!): Message!
+}
+
+type Notification {
+    id: ID!
+    userId: ID!
+    title: String!
+    message: String!
+    type: String!
+    isRead: Boolean!
+    createdAt: DateTime!
+}
+
+type Message {
+    id: ID!
+    senderId: ID!
+    receiverId: ID!
+    subject: String!
+    content: String!
+    isRead: Boolean!
+    createdAt: DateTime!
+}
+
+# File Upload
+scalar Upload
+

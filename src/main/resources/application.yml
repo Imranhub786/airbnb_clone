@@ -1,0 +1,421 @@
+# Airbnb Clone Application Configuration
+spring:
+  application:
+    name: airbnb-clone
+  
+  profiles:
+    active: postgresql
+  
+  # Database Configuration (H2 for development)
+  datasource:
+    url: jdbc:h2:mem:airbnb_clone
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  
+  # JPA Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+        batch_versioned_data: true
+        connection:
+          provider_disables_autocommit: true
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+          region:
+            factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+        envers:
+          audit_table_suffix: _audit
+          revision_field_name: rev
+          revision_type_field_name: revtype
+          store_data_at_delete: true
+          default_schema: public
+          default_catalog: public
+  
+  # H2 Console Configuration
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+  
+  # Cache Configuration
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=10000,expireAfterWrite=1h,expireAfterAccess=30m
+    redis:
+      host: localhost
+      port: 6379
+      password: 
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+  
+  # Redis Configuration
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 
+      database: 0
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+  
+  # File Upload Configuration
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+      enabled: true
+  
+  # Mail Configuration
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            trust: smtp.gmail.com
+  
+  # GraphQL Configuration
+  graphql:
+    graphiql:
+      enabled: true
+      path: /graphiql
+    path: /graphql
+    cors:
+      allowed-origins: "*"
+      allowed-methods: "GET,POST,OPTIONS"
+      allowed-headers: "*"
+      allow-credentials: true
+
+# Server Configuration
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+
+# JWT Configuration
+jwt:
+  secret: mySecretKey12345678901234567890123456789012345678901234567890
+  expiration: 86400 # 24 hours in seconds
+
+# PayPal Configuration
+paypal:
+  client:
+    id: ${PAYPAL_CLIENT_ID:}
+    secret: ${PAYPAL_CLIENT_SECRET:}
+  mode: sandbox # sandbox or live
+  webhook:
+    id: ${PAYPAL_WEBHOOK_ID:}
+  return:
+    url: ${PAYPAL_RETURN_URL:http://localhost:3000/payment/success}
+  cancel:
+    url: ${PAYPAL_CANCEL_URL:http://localhost:3000/payment/cancel}
+
+# AWS S3 Configuration
+aws:
+  s3:
+    bucket-name: ${AWS_S3_BUCKET:airbnb-clone-images}
+    region: ${AWS_REGION:us-east-1}
+    access-key: ${AWS_ACCESS_KEY:}
+    secret-key: ${AWS_SECRET_KEY:}
+    endpoint: ${AWS_S3_ENDPOINT:}
+
+# Application Configuration
+app:
+  # Currency Configuration
+  currency:
+    default: USD
+    supported:
+      - USD
+      - EUR
+      - GBP
+      - CAD
+      - AUD
+      - JPY
+      - INR
+      - BRL
+      - MXN
+      - CNY
+  
+  # Booking Configuration
+  booking:
+    default-minimum-nights: 1
+    default-maximum-nights: 30
+    default-check-in-time: "15:00"
+    default-check-out-time: "11:00"
+    cancellation-policies:
+      - FLEXIBLE
+      - MODERATE
+      - STRICT
+      - SUPER_STRICT_30
+      - SUPER_STRICT_60
+  
+  # Image Configuration
+  image:
+    max-size: 10485760 # 10MB
+    allowed-types:
+      - image/jpeg
+      - image/png
+      - image/gif
+      - image/webp
+    thumbnail:
+      width: 300
+      height: 200
+    medium:
+      width: 800
+      height: 600
+    large:
+      width: 1200
+      height: 900
+  
+  # Cache Configuration
+  cache:
+    ttl:
+      properties: 7200 # 2 hours
+      property-search: 1800 # 30 minutes
+      users: 3600 # 1 hour
+      bookings: 900 # 15 minutes
+      reviews: 14400 # 4 hours
+      availability: 300 # 5 minutes
+      payments: 600 # 10 minutes
+      exchange-rates: 21600 # 6 hours
+      stats: 1800 # 30 minutes
+  
+  # Rate Limiting
+  rate-limit:
+    requests-per-minute: 100
+    burst-capacity: 200
+  
+  # Security Configuration
+  security:
+    password:
+      min-length: 8
+      require-uppercase: true
+      require-lowercase: true
+      require-numbers: true
+      require-special-chars: true
+    session:
+      timeout: 1800 # 30 minutes
+    csrf:
+      enabled: false # Disabled for API
+
+# Logging Configuration
+logging:
+  level:
+    com.enterprise.airbnb: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.cache: DEBUG
+    org.springframework.data.redis: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/airbnb-clone.log
+    max-size: 10MB
+    max-history: 30
+
+# Management Endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,caches
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+    caches:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# Internationalization
+spring:
+  messages:
+    basename: messages
+    encoding: UTF-8
+    cache-duration: 3600
+
+---
+# Development Profile
+spring:
+  config:
+    activate:
+      on-profile: dev
+  
+  datasource:
+    url: jdbc:h2:mem:airbnb_clone_dev
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+
+logging:
+  level:
+    com.enterprise.airbnb: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+---
+# Production Profile
+spring:
+  config:
+    activate:
+      on-profile: prod
+  
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/airbnb_clone}
+    driver-class-name: org.postgresql.Driver
+    username: ${DATABASE_USERNAME:airbnb_user}
+    password: ${DATABASE_PASSWORD:airbnb_password}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        use_sql_comments: false
+        jdbc:
+          batch_size: 25
+        order_inserts: true
+        order_updates: true
+        batch_versioned_data: true
+        connection:
+          provider_disables_autocommit: true
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+          region:
+            factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+  
+  h2:
+    console:
+      enabled: false
+
+logging:
+  level:
+    com.enterprise.airbnb: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+  file:
+    name: /var/log/airbnb-clone/application.log
+
+server:
+  port: ${PORT:8080}
+  servlet:
+    context-path: /api
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+
+# Production-specific configurations
+app:
+  paypal:
+    mode: live
+  aws:
+    s3:
+      bucket-name: ${AWS_S3_BUCKET:airbnb-clone-prod-images}
+      region: ${AWS_REGION:us-east-1}
+  security:
+    password:
+      min-length: 12
+      require-uppercase: true
+      require-lowercase: true
+      require-numbers: true
+      require-special-chars: true
+    session:
+      timeout: 1800 # 30 minutes
+    csrf:
+      enabled: false # Disabled for API
+
+# Production cache configuration
+spring:
+  cache:
+    type: redis
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 20
+          max-idle: 10
+          min-idle: 5
+          max-wait: -1ms
+
+# Production management endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+    caches:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
